@@ -9,10 +9,12 @@ const CreatePostForm = ({ content, setContent, postSubmit }) => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="form-control"
-            placeholder="Write something"
+            placeholder="Write something..."
           ></textarea>
           <div className="card-footer">
-            <button className="btn btn-primary btn-sm mt-1">Post</button>{" "}
+            <button  disabled={!content} onClick={onSubmit} className="btn btn-primary btn-sm mt-1">
+              Post
+            </button>
           </div>
         </form>
       </div>

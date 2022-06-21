@@ -12,67 +12,80 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const [state, setState] = useContext(UserContext);
-  // console.log("STATE => ", state);
 
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
+      // console.log(name, email, password, secret);
+      setLoading(true);
       const { data } = await axios.post(`/login`, {
         email,
         password,
       });
+
       if (data.error) {
         toast.error(data.error);
         setLoading(false);
       } else {
-        // save in local storage
-        window.localStorage.setItem("auth", JSON.stringify(data));
-        // save in context
+        // update context
         setState({
           user: data.user,
           token: data.token,
         });
-        router.push("/user/dashboard");
+        // save in local storage
+        window.localStorage.setItem("auth", JSON.stringify(data));
+        router.push("/");
       }
     } catch (err) {
-      console.log(err);
+      toast.error(err.response.data);
       setLoading(false);
     }
   };
 
-  if (state && state.token) return <></>;
+  if (state && state.token) router.push("/");
 
   return (
     <div className="container-fluid">
-      <div className="row py-5 bg-default-image">
+      <div className="row py-5 text-light bg-default-image">
         <div className="col text-center">
-          <h1 className="text-light">Login</h1>
+          <h1>Login</h1>
         </div>
       </div>
 
-      {/* form */}
       <div className="row py-5">
         <div className="col-md-6 offset-md-3">
           <AuthForm
+            handleSubmit={handleSubmit}
             email={email}
             setEmail={setEmail}
             password={password}
             setPassword={setPassword}
             loading={loading}
-            handleSubmit={handleSubmit}
             page="login"
           />
         </div>
       </div>
 
       <div className="row">
-        <div className="col text-center">
-          <Link href="/forgot-password">
-            <a className="text-danger">Forgot password</a>
-          </Link>
+        <div className="col">
+          <p className="text-center">
+            Not yet registered?{" "}
+            <Link href="/register">
+              <a>Register</a>
+            </Link>
+          </p>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col">
+          <p className="text-center">
+            <Link href="/forgot-password">
+              <a className="text-danger">Forgot password</a>
+            </Link>
+          </p>
         </div>
       </div>
     </div>

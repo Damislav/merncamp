@@ -4,6 +4,7 @@ const { ObjectId } = mongoose.Schema;
 const postSchema = new mongoose.Schema(
   {
     content: {
+      type: {},
       required: true,
     },
     postedBy: {
@@ -14,11 +15,11 @@ const postSchema = new mongoose.Schema(
       url: String,
       public_id: String,
     },
-    likes: [{ type: ObjectId, ref: "User" }],
+    likes: [{ type: ObjectId, ref: "user" }],
     comments: [
       {
         text: String,
-        created: { type: Date, default: Date.now() },
+        created: { type: Date, default: Date.now },
         postedBy: {
           type: ObjectId,
           ref: "User",

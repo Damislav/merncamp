@@ -7,26 +7,28 @@ import AuthForm from "../components/forms/AuthForm";
 import { useRouter } from "next/router";
 
 const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState("Ryan");
+  const [email, setEmail] = useState("ryan@gmail.com");
+  const [password, setPassword] = useState("rrrrrr");
   const [secret, setSecret] = useState("");
   const [ok, setOk] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [state] = useContext(UserContext);
-  // const router = useRouter();
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // if you remove this page will reload
-    setLoading(true);
+    e.preventDefault();
     try {
+      // console.log(name, email, password, secret);
+      setLoading(true);
       const { data } = await axios.post(`/register`, {
         name,
         email,
         password,
         secret,
       });
+
       if (data.error) {
         toast.error(data.error);
         setLoading(false);
@@ -35,8 +37,8 @@ const Register = () => {
         setEmail("");
         setPassword("");
         setSecret("");
-        setLoading(false);
         setOk(data.ok);
+        setLoading(false);
       }
     } catch (err) {
       toast.error(err.response.data);
@@ -44,20 +46,20 @@ const Register = () => {
     }
   };
 
-  if (state && state.token) return <></>;
+  if (state && state.token) router.push("/");
 
   return (
     <div className="container-fluid">
-      <div className="row py-5 bg-default-image">
+      <div className="row py-5 text-light bg-default-image">
         <div className="col text-center">
-          <h1 className="text-light">Register</h1>
+          <h1>Register</h1>
         </div>
       </div>
 
-      {/* form */}
       <div className="row py-5">
         <div className="col-md-6 offset-md-3">
           <AuthForm
+            handleSubmit={handleSubmit}
             name={name}
             setName={setName}
             email={email}
@@ -67,13 +69,12 @@ const Register = () => {
             secret={secret}
             setSecret={setSecret}
             loading={loading}
-            handleSubmit={handleSubmit}
           />
         </div>
       </div>
 
-      <div className="row py-5">
-        <div className="col-md-6 offset-md-3">
+      <div className="row">
+        <div className="col">
           <Modal
             title="Congratulations!"
             visible={ok}
@@ -82,9 +83,20 @@ const Register = () => {
           >
             <p>You have successfully registered.</p>
             <Link href="/login">
-              <a className="btn btn-sm btn-primary">Login</a>
+              <a className="btn btn-primary btn-sm">Login</a>
             </Link>
           </Modal>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col">
+          <p className="text-center">
+            Already registered?{" "}
+            <Link href="/login">
+              <a>Login</a>
+            </Link>
+          </p>
         </div>
       </div>
     </div>

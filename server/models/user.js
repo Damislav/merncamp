@@ -23,6 +23,7 @@ const userSchema = new Schema(
     secret: {
       type: String,
       required: true,
+      lowercase: true, // Red red
     },
     about: {},
     photo: String,
