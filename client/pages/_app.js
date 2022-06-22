@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Nav from "../components/Nav";
-import Head from "next/head";
 import "./public/css/styles.css";
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
 import { ToastContainer } from "react-toastify";
