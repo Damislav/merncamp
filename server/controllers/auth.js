@@ -1,8 +1,9 @@
-import jwt from "jsonwebtoken";
 import User from "../models/user";
 import { hashPassword, comparePassword } from "../helpers/auth";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
+  //  console.log("REGISTER ENDPOINT => ", req.body);
   const { name, email, password, secret } = req.body;
   // validation
   if (!name) {
@@ -32,7 +33,7 @@ export const register = async (req, res) => {
   const user = new User({ name, email, password: hashedPassword, secret });
   try {
     await user.save();
-
+    // console.log("REGISTERED USE => ", user);
     return res.json({
       ok: true,
     });
@@ -43,6 +44,7 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  // console.log(req.body);
   try {
     const { email, password } = req.body;
     // check if our db has user with that email
@@ -87,6 +89,7 @@ export const currentUser = async (req, res) => {
 };
 
 export const forgotPassword = async (req, res) => {
+  // console.log(req.body);
   const { email, newPassword, secret } = req.body;
   // validation
   if (!newPassword || newPassword < 6) {

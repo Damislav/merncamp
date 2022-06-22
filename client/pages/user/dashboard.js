@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context";
 import UserRoute from "../../components/routes/UserRoute";
 import CreatePostForm from "../../components/forms/CreatePostForm";
 import { useRouter } from "next/router";
 import axios from "axios";
 import toast from "react-toastify";
+import PostList from "../../components/cards/PostsList";
 
 const Home = () => {
   const [state, setState] = useContext(UserContext);
@@ -12,19 +13,36 @@ const Home = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState({});
   const [uploading, setUploading] = useState(false);
+  // posts
+  const [posts, setPosts] = useState([]);
 
   // route
   const router = useRouter();
 
+  useEffect(() => {
+    if (state && state.token) fetchUserPosts();
+  }, [state && state.token]);
+
+  const fetchUserPosts = async () => {
+    try {
+      const { data } = await axios.get("/user-posts");
+
+      setPosts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const postSubmit = async (e) => {
     e.preventDefault();
-    // console.log("post => ", content);
+
     try {
       const { data } = await axios.post("/create-post", { content, image });
-      // console.log("create post response => ", data);
+      console.log("create post response => ", data);
       if (data.error) {
         toast.error(data.error);
       } else {
+        fetchUserPosts();
         toast.success("Post created");
         setContent("");
         setImage({});
@@ -38,11 +56,11 @@ const Home = () => {
     const file = e.target.files[0];
     let formData = new FormData();
     formData.append("image", file);
-    // loading
+
     setUploading(true);
     try {
       const { data } = await axios.post("/upload-image", formData);
-      // setimage state
+
       setImage({
         url: data.url,
         public_id: data.public_id,
@@ -73,7 +91,10 @@ const Home = () => {
               uploading={uploading}
               image={image}
             />
+            <br />
+            <PostList posts={posts} />
           </div>
+
           <div className="col-md-4">Sidebar</div>
         </div>
       </div>

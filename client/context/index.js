@@ -18,9 +18,9 @@ const UserProvider = ({ children }) => {
 
   const token = state && state.token ? state.token : "";
   axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
-  axios.defaults.headers.common["Authorization"] = token ? `Bearer ${token}` : null;
-  
-  authorization: axios.interceptors.response.use(
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  axios.interceptors.response.use(
     function (response) {
       // Do something before request is sent
       return response;
