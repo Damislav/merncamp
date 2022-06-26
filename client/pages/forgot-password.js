@@ -3,10 +3,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Modal } from "antd";
 import Link from "next/link";
-
-import { useRouter } from "next/router";
-import { UserContext } from "../context/index";
 import ForgotPasswordForm from "../components/forms/ForgotPasswordForm";
+import { UserContext } from "../context";
+import { useRouter } from "next/router";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("ryan@gmail.com");

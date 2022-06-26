@@ -2,6 +2,7 @@ import { useContext } from "react";
 import renderHTML from "react-render-html";
 import moment from "moment";
 import { Avatar } from "antd";
+import PostImage from "../images/PostImage";
 import {
   HeartOutlined,
   HeartFilled,
@@ -9,10 +10,8 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { UserContext } from "../../context/index";
+import { UserContext } from "../../context";
 import { useRouter } from "next/router";
-
-import PostImage from "../images/PostImage";
 
 const PostList = ({ posts }) => {
   const [state] = useContext(UserContext);

@@ -6,11 +6,13 @@ import { UserContext } from "../context";
 function Home() {
   const [state, setState] = useContext(UserContext);
   return (
-    <div className="row">
-      <div className="col">
-        <h1>Home page</h1>
+    <div className="container">
+      <div className="row">
+        <div className="col">
+          <h1 className="display-1 text-center">Home page</h1>
 
-        <Image width={500} height={500} src={profilePic} />
+          <Image width={500} height={500} src={profilePic} />
+        </div>
       </div>
     </div>
   );
