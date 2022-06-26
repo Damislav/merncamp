@@ -12,6 +12,7 @@ import {
   postsByUser,
   userPost,
   updatePost,
+  deletePost,
 } from "../controllers/post";
 
 router.post("/create-post", requireSignin, createPost);
@@ -25,5 +26,6 @@ router.post(
 router.get("/user-posts", requireSignin, postsByUser);
 router.get("/user-post/:_id", requireSignin, userPost);
 router.put("/update-post/:_id", requireSignin, canEditDeletePost, updatePost);
+router.delete("delete-user", requireSignin, canEditDeletePost, deletePost);
 
 module.exports = router;
