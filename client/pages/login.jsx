@@ -37,7 +37,7 @@ const Login = () => {
         });
         // save in local storage
         window.localStorage.setItem("auth", JSON.stringify(data));
-        router.push("/");
+        router.push("/user/dashboard");
       }
     } catch (err) {
       toast.error(err.response.data);
