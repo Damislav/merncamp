@@ -1,9 +1,9 @@
 import User from "../models/user";
 import { hashPassword, comparePassword } from "../helpers/auth";
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4, v4 } from "uuid";
 
 export const register = async (req, res) => {
-  //  console.log("REGISTER ENDPOINT => ", req.body);
   const { name, email, password, secret } = req.body;
   // validation
   if (!name) {
@@ -30,10 +30,16 @@ export const register = async (req, res) => {
   // hash password
   const hashedPassword = await hashPassword(password);
 
-  const user = new User({ name, email, password: hashedPassword, secret });
+  const user = new User({
+    name,
+    email,
+    password: hashedPassword,
+    secret,
+    username: uuidv4(),
+  });
   try {
     await user.save();
-    // console.log("REGISTERED USE => ", user);
+
     return res.json({
       ok: true,
     });
@@ -44,7 +50,6 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  // console.log(req.body);
   try {
     const { email, password } = req.body;
     // check if our db has user with that email
@@ -89,7 +94,6 @@ export const currentUser = async (req, res) => {
 };
 
 export const forgotPassword = async (req, res) => {
-  // console.log(req.body);
   const { email, newPassword, secret } = req.body;
   // validation
   if (!newPassword || newPassword < 6) {
@@ -120,5 +124,46 @@ export const forgotPassword = async (req, res) => {
     return res.json({
       error: "Something wrong. Try again.",
     });
+  }
+};
+
+export const profileUpdate = async (req, res) => {
+  try {
+    const data = {};
+
+    if (req.body.username) {
+      data.username = req.body.username;
+    }
+    if (req.body.about) {
+      data.about = req.body.about;
+    }
+    if (req.body.name) {
+      data.name = req.body.name;
+    }
+    if (req.body.password) {
+      if (req.body.password.length < 6) {
+        return res.json({
+          error: "Password is required and should be min 6 characters long",
+        });
+      } else {
+        data.password = await hashPassword(req.body.password);
+      }
+    }
+    if (req.body.secret) {
+      data.secret = req.body.secret;
+    }
+    if (req.body.image) {
+      data.image = req.body.image;
+    }
+    let user = await User.findByIdAndUpdate(req.user._id, data, { new: true });
+
+    user.password = undefined;
+    user.secret = undefined;
+    res.json(user);
+  } catch (err) {
+    if (err.code == 11000) {
+      return res.json({ error: "Duplicate username" });
+    }
+    console.log(err);
   }
 };

@@ -8,6 +8,7 @@ cloudinary.config({
 });
 
 export const createPost = async (req, res) => {
+  //   console.log("post => ", req.body);
   const { content, image } = req.body;
   if (!content.length) {
     return res.json({
@@ -27,7 +28,7 @@ export const createPost = async (req, res) => {
 export const uploadImage = async (req, res) => {
   try {
     const result = await cloudinary.uploader.upload(req.files.image.path);
-    // console.log("uploaded image url => ", result);
+
     res.json({
       url: result.secure_url,
       public_id: result.public_id,
@@ -43,7 +44,7 @@ export const postsByUser = async (req, res) => {
       .populate("postedBy", "_id name image")
       .sort({ createdAt: -1 })
       .limit(10);
-    // console.log('posts',posts)
+
     res.json(posts);
   } catch (err) {
     console.log(err);
@@ -69,15 +70,15 @@ export const updatePost = async (req, res) => {
     console.log(err);
   }
 };
+
 export const deletePost = async (req, res) => {
   try {
-    const post = await Post.findByIdAndRemove(req.params._id);
-    // remove from cloudinary
+    const post = await Post.findByIdAndDelete(req.params._id);
+    // remove the image from cloudinary
     if (post.image && post.image.public_id) {
       const image = await cloudinary.uploader.destroy(post.image.public_id);
     }
-    res.json_({ ok: true });
-    res.status(200).json({ message: "Post deleted" });
+    res.json({ ok: true });
   } catch (err) {
     console.log(err);
   }

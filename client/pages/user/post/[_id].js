@@ -13,7 +13,7 @@ const EditPost = () => {
   const [uploading, setUploading] = useState(false);
 
   const router = useRouter();
-
+  //   console.log("rotuer", router);
   const _id = router.query._id;
 
   useEffect(() => {
@@ -53,11 +53,11 @@ const EditPost = () => {
     const file = e.target.files[0];
     let formData = new FormData();
     formData.append("image", file);
-
+    // console.log([...formData]);
     setUploading(true);
     try {
       const { data } = await axios.post("/upload-image", formData);
-
+      // console.log("uploaded image => ", data);
       setImage({
         url: data.url,
         public_id: data.public_id,
