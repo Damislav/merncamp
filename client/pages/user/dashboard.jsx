@@ -9,6 +9,7 @@ import PostList from "../../components/cards/PostList";
 import People from "../../components/cards/People";
 import Link from "next/link";
 import { Modal } from "antd";
+import CommentForm from "../../components/forms/CommentForm";
 
 const Home = () => {
   const [state, setState] = useContext(UserContext);
@@ -27,6 +28,7 @@ const Home = () => {
 
   // route
   const router = useRouter();
+
   useEffect(() => {
     if (state && state.token) {
       newsFeed();
@@ -37,7 +39,7 @@ const Home = () => {
   const newsFeed = async () => {
     try {
       const { data } = await axios.get("/news-feed");
-
+      // console.log("user posts => ", data);
       setPosts(data);
     } catch (err) {
       console.log(err);
@@ -55,7 +57,7 @@ const Home = () => {
 
   const postSubmit = async (e) => {
     e.preventDefault();
-
+    // console.log("post => ", content);
     try {
       const { data } = await axios.post("/create-post", { content, image });
       console.log("create post response => ", data);
@@ -76,11 +78,11 @@ const Home = () => {
     const file = e.target.files[0];
     let formData = new FormData();
     formData.append("image", file);
-
+    // console.log([...formData]);
     setUploading(true);
     try {
       const { data } = await axios.post("/upload-image", formData);
-
+      // console.log("uploaded image => ", data);
       setImage({
         url: data.url,
         public_id: data.public_id,
@@ -134,10 +136,11 @@ const Home = () => {
       console.log(err);
     }
   };
+
   const handleUnlike = async (_id) => {
     try {
       const { data } = await axios.put("/unlike-post", { _id });
-      // console.log("unliked", data);
+
       newsFeed();
     } catch (err) {
       console.log(err);
@@ -148,13 +151,28 @@ const Home = () => {
     setCurrentPost(post);
     setVisible(true);
   };
-  const addComment = async () => {
-    //
+
+  const addComment = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.put("/add-comment", {
+        postId: currentPost._id,
+        comment,
+      });
+      console.log("add comment", data);
+      setComment("");
+      setVisible(false);
+      newsFeed();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const removeComment = async () => {
     //
   };
+
   return (
     <UserRoute>
       <div className="container-fluid">
@@ -200,7 +218,11 @@ const Home = () => {
           title="Comment"
           footer={null}
         >
-          Show comment form
+          <CommentForm
+            comment={comment}
+            setComment={setComment}
+            addComment={addComment}
+          />
         </Modal>
       </div>
     </UserRoute>

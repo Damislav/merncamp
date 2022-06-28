@@ -6,6 +6,7 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_KEY,
   api_secret: process.env.CLOUDINARY_SECRET,
 });
+
 export const createPost = async (req, res) => {
   //   console.log("post => ", req.body);
   const { content, image } = req.body;
@@ -54,7 +55,9 @@ export const postsByUser = async (req, res) => {
 
 export const userPost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params._id);
+    const post = await Post.findById(req.params._id)
+      .populate("postedBy", "_id name image")
+      .populate("comments.postedBy", "_id name image");
     res.json(post);
   } catch (err) {
     console.log(err);
@@ -124,6 +127,39 @@ export const unlikePost = async (req, res) => {
       req.body._id,
       {
         $pull: { likes: req.user._id },
+      },
+      { new: true }
+    );
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const addComment = async (req, res) => {
+  try {
+    const { postId, comment } = req.body;
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $push: { comments: { text: comment, postedBy: req.user._id } },
+      },
+      { new: true }
+    )
+      .populate("postedBy", "_id name image")
+      .populate("comments.postedBy", "_id name image");
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const removeComment = async (req, res) => {
+  try {
+    const { postId, comment } = req.body;
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $pull: { comments: { _id: comment._id } },
       },
       { new: true }
     );

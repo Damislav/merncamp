@@ -22,7 +22,7 @@ const Nav = () => {
 
   return (
     <nav
-      className="nav d-flex justify-content-between"
+      className="nav d-flex justify-content-between align-items-center"
       style={{ backgroundColor: "blue" }}
     >
       <Link href="/">
