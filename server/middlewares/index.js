@@ -9,7 +9,7 @@ export const requireSignin = expressJwt({
 export const canEditDeletePost = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params._id);
-
+    // console.log("POST in EDITDELETE MIDDLEWARE => ", post);
     if (req.user._id != post.postedBy) {
       return res.status(400).send("Unauthorized");
     } else {

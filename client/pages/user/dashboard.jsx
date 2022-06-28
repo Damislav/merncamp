@@ -2,13 +2,13 @@ import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context";
 import UserRoute from "../../components/routes/UserRoute";
 import PostForm from "../../components/forms/PostForm";
-import { useRouter } from "next/router";
+import { useRouter, userRouter } from "next/router";
 import axios from "axios";
 import { toast } from "react-toastify";
 import PostList from "../../components/cards/PostList";
 import People from "../../components/cards/People";
 import Link from "next/link";
-import { Modal } from "antd";
+import { Modal, Pagination } from "antd";
 import CommentForm from "../../components/forms/CommentForm";
 
 const Home = () => {
@@ -25,6 +25,9 @@ const Home = () => {
   const [comment, setComment] = useState("");
   const [visible, setVisible] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
+  // pagination
+  const [totalPosts, setTotalPosts] = useState(0);
+  const [page, setPage] = useState(1);
 
   // route
   const router = useRouter();
@@ -34,11 +37,19 @@ const Home = () => {
       newsFeed();
       findPeople();
     }
-  }, [state && state.token]);
+  }, [state && state.token, page]);
+
+  useEffect(() => {
+    try {
+      axios.get("/total-posts").then(({ data }) => setTotalPosts(data));
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   const newsFeed = async () => {
     try {
-      const { data } = await axios.get("/news-feed");
+      const { data } = await axios.get(`/news-feed/${page}`);
       // console.log("user posts => ", data);
       setPosts(data);
     } catch (err) {
@@ -57,13 +68,14 @@ const Home = () => {
 
   const postSubmit = async (e) => {
     e.preventDefault();
-    // console.log("post => ", content);
+
     try {
       const { data } = await axios.post("/create-post", { content, image });
       console.log("create post response => ", data);
       if (data.error) {
         toast.error(data.error);
       } else {
+        setPage(1);
         newsFeed();
         toast.success("Post created");
         setContent("");
@@ -78,11 +90,11 @@ const Home = () => {
     const file = e.target.files[0];
     let formData = new FormData();
     formData.append("image", file);
-    // console.log([...formData]);
+
     setUploading(true);
     try {
       const { data } = await axios.post("/upload-image", formData);
-      // console.log("uploaded image => ", data);
+
       setImage({
         url: data.url,
         public_id: data.public_id,
@@ -169,8 +181,19 @@ const Home = () => {
     }
   };
 
-  const removeComment = async () => {
-    //
+  const removeComment = async (postId, comment) => {
+    let answer = window.confirm("Are you sure?");
+    if (!answer) return;
+    try {
+      const { data } = await axios.put("/remove-comment", {
+        postId,
+        comment,
+      });
+      console.log("comment removed", data);
+      newsFeed();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -199,6 +222,13 @@ const Home = () => {
               handleLike={handleLike}
               handleUnlike={handleUnlike}
               handleComment={handleComment}
+              removeComment={removeComment}
+            />
+
+            <Pagination
+              current={page}
+              total={(totalPosts / 3) * 10}
+              onChange={(value) => setPage(value)}
             />
           </div>
 

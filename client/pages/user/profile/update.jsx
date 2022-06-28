@@ -26,6 +26,7 @@ const ProfileUpdate = () => {
 
   useEffect(() => {
     if (state && state.user) {
+      //   console.log("user from state => ", state.user);
       setUsername(state.user.username);
       setAbout(state.user.about);
       setName(state.user.name);
@@ -71,11 +72,11 @@ const ProfileUpdate = () => {
     const file = e.target.files[0];
     let formData = new FormData();
     formData.append("image", file);
-    // console.log([...formData]);
+
     setUploading(true);
     try {
       const { data } = await axios.post("/upload-image", formData);
-      // console.log("uploaded image => ", data);
+
       setImage({
         url: data.url,
         public_id: data.public_id,

@@ -55,6 +55,7 @@ const Following = () => {
 
   return (
     <div className="row col-md-6 offset-md-3">
+      {/* <pre>{JSON.stringify(people, null, 4)}</pre> */}
       <List
         itemLayout="horizontal"
         dataSource={people}
