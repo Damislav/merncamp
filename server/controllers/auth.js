@@ -1,7 +1,7 @@
 import User from "../models/user";
 import { hashPassword, comparePassword } from "../helpers/auth";
 import jwt from "jsonwebtoken";
-import { v4 as uuidv4, v4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 export const register = async (req, res) => {
   const { name, email, password, secret } = req.body;
@@ -50,6 +50,7 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  // console.log(req.body);
   try {
     const { email, password } = req.body;
     // check if our db has user with that email
@@ -94,6 +95,7 @@ export const currentUser = async (req, res) => {
 };
 
 export const forgotPassword = async (req, res) => {
+  // console.log(req.body);
   const { email, newPassword, secret } = req.body;
   // validation
   if (!newPassword || newPassword < 6) {
@@ -129,6 +131,7 @@ export const forgotPassword = async (req, res) => {
 
 export const profileUpdate = async (req, res) => {
   try {
+    // console.log("profile update req.body", req.body);
     const data = {};
 
     if (req.body.username) {
@@ -156,7 +159,7 @@ export const profileUpdate = async (req, res) => {
       data.image = req.body.image;
     }
     let user = await User.findByIdAndUpdate(req.user._id, data, { new: true });
-
+    // console.log('udpated user', user)
     user.password = undefined;
     user.secret = undefined;
     res.json(user);
@@ -170,10 +173,8 @@ export const profileUpdate = async (req, res) => {
 
 export const findPeople = async (req, res) => {
   try {
-    // get own user
     const user = await User.findById(req.user._id);
-
-    // get user following
+    // user.following
     let following = user.following;
     following.push(user._id);
     const people = await User.find({ _id: { $nin: following } })
@@ -222,7 +223,29 @@ export const userFollowing = async (req, res) => {
   }
 };
 
+/// middleware
+export const removeFollower = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.body._id, {
+      $pull: { followers: req.user._id },
+    });
+    next();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const userUnfollow = async (req, res) => {
   try {
-  } catch (err) {}
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $pull: { following: req.body._id },
+      },
+      { new: true }
+    );
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+  }
 };

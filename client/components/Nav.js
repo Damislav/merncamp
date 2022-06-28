@@ -15,14 +15,14 @@ const Nav = () => {
   const router = useRouter();
 
   const logout = () => {
-    window.localStorage.removeItem("auth");
     setState(null);
+    window.localStorage.removeItem("auth");
     router.push("/login");
   };
 
   return (
     <nav
-      className="nav d-flex justify-content-between align-items-center"
+      className="nav d-flex justify-content-between"
       style={{ backgroundColor: "blue" }}
     >
       <Link href="/">

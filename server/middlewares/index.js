@@ -1,5 +1,5 @@
-import expressJwt from "express-jwt";
 import Post from "../models/post";
+import expressJwt from "express-jwt";
 
 export const requireSignin = expressJwt({
   secret: process.env.JWT_SECRET,

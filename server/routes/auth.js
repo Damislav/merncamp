@@ -15,6 +15,7 @@ import {
   addFollower,
   userFollow,
   userFollowing,
+  removeFollower,
   userUnfollow,
 } from "../controllers/auth";
 
@@ -27,7 +28,7 @@ router.put("/profile-update", requireSignin, profileUpdate);
 router.get("/find-people", requireSignin, findPeople);
 
 router.put("/user-follow", requireSignin, addFollower, userFollow);
+router.put("/user-unfollow", requireSignin, removeFollower, userUnfollow);
 router.get("/user-following", requireSignin, userFollowing);
-router.get("/user-unfollow", requireSignin, userUnfollow);
 
 module.exports = router;
