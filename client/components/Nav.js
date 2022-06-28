@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { UserContext } from "../context";
 import { useRouter } from "next/router";
+import { Avatar } from "antd";
 
 const Nav = () => {
   const [current, setCurrent] = useState("");
@@ -21,12 +22,14 @@ const Nav = () => {
 
   return (
     <nav
-      className="nav d-flex justify-content-between"
-      style={{ backgroundColor: "blue" }}>
+      className="nav d-flex justify-content-between align-items-center"
+      style={{ backgroundColor: "blue" }}
+    >
       <Link href="/">
         <a
-          className={`nav-link text-light logo ${current === "/" && "active"}`}>
-          MERNCAMP
+          className={`nav-link text-light logo ${current === "/" && "active"}`}
+        >
+          <Avatar src="/images/logo.png" /> MERNCAMP
         </a>
       </Link>
 
@@ -38,7 +41,8 @@ const Nav = () => {
               role="button"
               id="dropdownMenuLink"
               data-bs-toggle="dropdown"
-              aria-expanded="false">
+              aria-expanded="false"
+            >
               {state && state.user && state.user.name}
             </a>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -47,7 +51,8 @@ const Nav = () => {
                   <a
                     className={`nav-link dropdown-item ${
                       current === "/user/dashboard" && "active"
-                    }`}>
+                    }`}
+                  >
                     Dashboard
                   </a>
                 </Link>
@@ -58,7 +63,8 @@ const Nav = () => {
                   <a
                     className={`nav-link dropdown-item ${
                       current === "/user/profile/update" && "active"
-                    }`}>
+                    }`}
+                  >
                     Profile
                   </a>
                 </Link>
@@ -78,7 +84,8 @@ const Nav = () => {
             <a
               className={`nav-link text-light ${
                 current === "/login" && "active"
-              }`}>
+              }`}
+            >
               Login
             </a>
           </Link>
@@ -87,7 +94,8 @@ const Nav = () => {
             <a
               className={`nav-link text-light ${
                 current === "/register" && "active"
-              }`}>
+              }`}
+            >
               Register
             </a>
           </Link>

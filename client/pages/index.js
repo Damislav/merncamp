@@ -1,5 +1,5 @@
 import Image from "next/image";
-import profilePic from "./public/images/basketball.webp";
+import profilePic from "/public/images/basketball.webp";
 import { useContext } from "react";
 import { UserContext } from "../context";
 

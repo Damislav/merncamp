@@ -2,11 +2,12 @@ import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context";
 import UserRoute from "../../components/routes/UserRoute";
 import PostForm from "../../components/forms/PostForm";
-import { useRouter, userRouter } from "next/router";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from "react-toastify";
 import PostList from "../../components/cards/PostList";
 import People from "../../components/cards/People";
+import Link from "next/link";
 
 const Home = () => {
   const [state, setState] = useContext(UserContext);
@@ -16,7 +17,7 @@ const Home = () => {
   const [uploading, setUploading] = useState(false);
   // posts
   const [posts, setPosts] = useState([]);
-  // not following
+  // people
   const [people, setPeople] = useState([]);
 
   // route
@@ -24,14 +25,14 @@ const Home = () => {
 
   useEffect(() => {
     if (state && state.token) {
-      fetchUserPosts();
+      newsFeed();
       findPeople();
     }
   }, [state && state.token]);
 
-  const fetchUserPosts = async () => {
+  const newsFeed = async () => {
     try {
-      const { data } = await axios.get("/user-posts");
+      const { data } = await axios.get("/news-feed");
       // console.log("user posts => ", data);
       setPosts(data);
     } catch (err) {
@@ -47,16 +48,17 @@ const Home = () => {
       console.log(err);
     }
   };
+
   const postSubmit = async (e) => {
     e.preventDefault();
-    // console.log("post => ", content);
+
     try {
       const { data } = await axios.post("/create-post", { content, image });
       console.log("create post response => ", data);
       if (data.error) {
         toast.error(data.error);
       } else {
-        fetchUserPosts();
+        newsFeed();
         toast.success("Post created");
         setContent("");
         setImage({});
@@ -70,11 +72,11 @@ const Home = () => {
     const file = e.target.files[0];
     let formData = new FormData();
     formData.append("image", file);
-    // console.log([...formData]);
+
     setUploading(true);
     try {
       const { data } = await axios.post("/upload-image", formData);
-      // console.log("uploaded image => ", data);
+
       setImage({
         url: data.url,
         public_id: data.public_id,
@@ -92,7 +94,28 @@ const Home = () => {
       if (!answer) return;
       const { data } = await axios.delete(`/delete-post/${post._id}`);
       toast.error("Post deleted");
-      fetchUserPosts();
+      newsFeed();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleFollow = async (user) => {
+    try {
+      const { data } = await axios.put("/user-follow", { _id: user._id });
+
+      // update local storage, update user, keep token
+      let auth = JSON.parse(localStorage.getItem("auth"));
+      auth.user = data;
+      localStorage.setItem("auth", JSON.stringify(auth));
+      // update context
+      setState({ ...state, user: data });
+      // update people state
+      let filtered = people.filter((p) => p._id !== user._id);
+      setPeople(filtered);
+      // rerender the posts in newsfeed
+      newsFeed();
+      toast.success(`Following ${user.name}`);
     } catch (err) {
       console.log(err);
     }
@@ -122,7 +145,12 @@ const Home = () => {
           </div>
 
           <div className="col-md-4">
-            <People people={people} />
+            {state && state.user && state.user.following && (
+              <Link href={`/user/following`}>
+                <a className="h6">{state.user.following.length} Following</a>
+              </Link>
+            )}
+            <People people={people} handleFollow={handleFollow} />
           </div>
         </div>
       </div>

@@ -13,6 +13,7 @@ import {
   userPost,
   updatePost,
   deletePost,
+  newsFeed,
 } from "../controllers/post";
 
 router.post("/create-post", requireSignin, createPost);
@@ -32,5 +33,7 @@ router.delete(
   canEditDeletePost,
   deletePost
 );
+
+router.get("/news-feed", requireSignin, newsFeed);
 
 module.exports = router;

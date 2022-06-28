@@ -1,4 +1,4 @@
-import "./public/css/styles.css";
+import "/public/css/styles.css";
 import { UserProvider } from "../context";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Nav from "../components/Nav";

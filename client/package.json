@@ -1,6 +1,7 @@
 {
   "name": "client",
   "main": "index.js",
+  
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "antd": "^4.21.3",
