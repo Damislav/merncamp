@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context";
 import UserRoute from "../../components/routes/UserRoute";
 import PostForm from "../../components/forms/PostForm";
-import { useRouter, userRouter } from "next/router";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from "react-toastify";
 import PostList from "../../components/cards/PostList";
@@ -10,6 +10,7 @@ import People from "../../components/cards/People";
 import Link from "next/link";
 import { Modal, Pagination } from "antd";
 import CommentForm from "../../components/forms/CommentForm";
+import Search from "../../components/Search";
 
 const Home = () => {
   const [state, setState] = useContext(UserContext);
@@ -50,7 +51,6 @@ const Home = () => {
   const newsFeed = async () => {
     try {
       const { data } = await axios.get(`/news-feed/${page}`);
-      // console.log("user posts => ", data);
       setPosts(data);
     } catch (err) {
       console.log(err);
@@ -140,9 +140,10 @@ const Home = () => {
   };
 
   const handleLike = async (_id) => {
+    // console.log("like this post => ", _id);
     try {
       const { data } = await axios.put("/like-post", { _id });
-
+      // console.log("liked", data);
       newsFeed();
     } catch (err) {
       console.log(err);
@@ -150,9 +151,10 @@ const Home = () => {
   };
 
   const handleUnlike = async (_id) => {
+    // console.log("unlike this post => ", _id);
     try {
       const { data } = await axios.put("/unlike-post", { _id });
-
+      // console.log("unliked", data);
       newsFeed();
     } catch (err) {
       console.log(err);
@@ -182,6 +184,7 @@ const Home = () => {
   };
 
   const removeComment = async (postId, comment) => {
+    // console.log(postId, comment);
     let answer = window.confirm("Are you sure?");
     if (!answer) return;
     try {
@@ -229,10 +232,15 @@ const Home = () => {
               current={page}
               total={(totalPosts / 3) * 10}
               onChange={(value) => setPage(value)}
+              className="pb-5"
             />
           </div>
 
+          {/* <pre>{JSON.stringify(posts, null, 4)}</pre> */}
+
           <div className="col-md-4">
+            <Search />
+            <br />
             {state && state.user && state.user.following && (
               <Link href={`/user/following`}>
                 <a className="h6">{state.user.following.length} Following</a>
