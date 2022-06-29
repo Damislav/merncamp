@@ -6,7 +6,7 @@ import { UserContext } from "../../context";
 import axios from "axios";
 import { RollbackOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import { toast } from "react-toastify";
+
 const Following = () => {
   const [state, setState] = useContext(UserContext);
   // state
@@ -55,6 +55,7 @@ const Following = () => {
 
   return (
     <div className="row col-md-6 offset-md-3">
+      {/* <pre>{JSON.stringify(people, null, 4)}</pre> */}
       <List
         itemLayout="horizontal"
         dataSource={people}

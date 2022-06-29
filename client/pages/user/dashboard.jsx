@@ -51,6 +51,7 @@ const Home = () => {
   const newsFeed = async () => {
     try {
       const { data } = await axios.get(`/news-feed/${page}`);
+      // console.log("user posts => ", data);
       setPosts(data);
     } catch (err) {
       console.log(err);
@@ -90,11 +91,9 @@ const Home = () => {
     const file = e.target.files[0];
     let formData = new FormData();
     formData.append("image", file);
-
     setUploading(true);
     try {
       const { data } = await axios.post("/upload-image", formData);
-
       setImage({
         url: data.url,
         public_id: data.public_id,
@@ -121,7 +120,6 @@ const Home = () => {
   const handleFollow = async (user) => {
     try {
       const { data } = await axios.put("/user-follow", { _id: user._id });
-
       // update local storage, update user, keep token
       let auth = JSON.parse(localStorage.getItem("auth"));
       auth.user = data;
@@ -140,7 +138,6 @@ const Home = () => {
   };
 
   const handleLike = async (_id) => {
-    // console.log("like this post => ", _id);
     try {
       const { data } = await axios.put("/like-post", { _id });
       // console.log("liked", data);
@@ -151,7 +148,6 @@ const Home = () => {
   };
 
   const handleUnlike = async (_id) => {
-    // console.log("unlike this post => ", _id);
     try {
       const { data } = await axios.put("/unlike-post", { _id });
       // console.log("unliked", data);
@@ -204,7 +200,7 @@ const Home = () => {
       <div className="container-fluid">
         <div className="row py-5 text-light bg-default-image">
           <div className="col text-center">
-            <h1>Newsfeed</h1>
+            <h1 className="text-white">Newsfeed</h1>
           </div>
         </div>
 
@@ -235,8 +231,6 @@ const Home = () => {
               className="pb-5"
             />
           </div>
-
-          {/* <pre>{JSON.stringify(posts, null, 4)}</pre> */}
 
           <div className="col-md-4">
             <Search />

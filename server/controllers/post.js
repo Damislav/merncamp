@@ -183,3 +183,27 @@ export const totalPosts = async (req, res) => {
     console.log(err);
   }
 };
+
+export const posts = async (req, res) => {
+  try {
+    const posts = await Post.find()
+      .populate("postedBy", "_id name image")
+      .populate("comments.postedBy", "_id name image")
+      .sort({ createdAt: -1 })
+      .limit(12);
+    res.json(posts);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getPost = async (req, res) => {
+  try {
+    const post = await Post.find({ _id: req.params._id })
+      .populate("postedBy", "_id name image")
+      .populate("comments.postedBy", "_id name image");
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
