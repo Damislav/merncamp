@@ -87,7 +87,7 @@ const AuthForm = ({
         onChange={(e) => setPassword(e.target.value)}
         type="password"
         className="form-control"
-        placeholder="Enter name"
+        placeholder="Enter password"
       />
     </div>
 

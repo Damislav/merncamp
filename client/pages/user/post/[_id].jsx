@@ -13,7 +13,7 @@ const EditPost = () => {
   const [uploading, setUploading] = useState(false);
 
   const router = useRouter();
-  //   console.log("rotuer", router);
+
   const _id = router.query._id;
 
   useEffect(() => {

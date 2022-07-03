@@ -9,7 +9,7 @@ const UserProvider = ({ children }) => {
     user: {},
     token: "",
   });
-
+  
   useEffect(() => {
     setState(JSON.parse(window.localStorage.getItem("auth")));
   }, []);

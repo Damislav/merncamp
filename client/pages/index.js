@@ -1,15 +1,21 @@
-import axios from "axios";
 import { useContext } from "react";
-import ParallaxBG from "../components/cards/ParallaxBG";
 import { UserContext } from "../context";
-import Post from "../components/cards/Post";
+import ParallaxBG from "../components/cards/ParallaxBG";
+import axios from "axios";
+import PostPublic from "../components/cards/PostPublic";
 import Head from "next/head";
-function Home({ posts }) {
+import Link from "next/link";
+
+const Home = ({ posts }) => {
   const [state, setState] = useContext(UserContext);
+
   const head = () => (
     <Head>
       <title>MERNCAMP - A social network by devs for devs</title>
-      <meta name="description" description="A social network for developers" />
+      <meta
+        name="description"
+        content="A social network by developers for other web developers"
+      />
       <meta
         property="og:description"
         content="A social network by developers for other web developers"
@@ -23,6 +29,7 @@ function Home({ posts }) {
       />
     </Head>
   );
+
   return (
     <>
       {head()}
@@ -30,11 +37,11 @@ function Home({ posts }) {
 
       <div className="container">
         <div className="row pt-5">
-          {posts.map((post) => (
-            <div className="col-md-4">
-              <Link key={post._id} href={`/post/${post._id}`}>
+          {posts.map((post, i) => (
+            <div key={i} className="col-md-4">
+              <Link href={`/post/view/${post._id}`}>
                 <a>
-                  <Post post={post} />
+                  <PostPublic key={post._id} post={post} />
                 </a>
               </Link>
             </div>
@@ -43,16 +50,16 @@ function Home({ posts }) {
       </div>
     </>
   );
-}
-
-export default Home;
+};
 
 export async function getServerSideProps() {
-  const { data } = await axios.get("/posts");
-
+  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API}/posts`);
+  // console.log(data);
   return {
     props: {
       posts: data,
     },
   };
 }
+
+export default Home;

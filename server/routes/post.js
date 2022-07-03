@@ -53,5 +53,6 @@ router.get("/total-posts", totalPosts);
 
 router.get("/posts", posts);
 
-router.get("/post/:id", getPost);
+router.get("/post/:_id", getPost);
+
 module.exports = router;

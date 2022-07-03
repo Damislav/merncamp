@@ -1,6 +1,6 @@
 import Post from "../models/post";
-import cloudinary from "cloudinary";
 import User from "../models/user";
+import cloudinary from "cloudinary";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -9,6 +9,7 @@ cloudinary.config({
 });
 
 export const createPost = async (req, res) => {
+  //   console.log("post => ", req.body);
   const { content, image } = req.body;
   if (!content.length) {
     return res.json({
@@ -46,7 +47,7 @@ export const postsByUser = async (req, res) => {
       .populate("postedBy", "_id name image")
       .sort({ createdAt: -1 })
       .limit(10);
-
+    // console.log('posts',posts)
     res.json(posts);
   } catch (err) {
     console.log(err);
@@ -199,7 +200,7 @@ export const posts = async (req, res) => {
 
 export const getPost = async (req, res) => {
   try {
-    const post = await Post.find({ _id: req.params._id })
+    const post = await Post.findById(req.params._id)
       .populate("postedBy", "_id name image")
       .populate("comments.postedBy", "_id name image");
     res.json(post);

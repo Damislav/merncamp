@@ -23,12 +23,13 @@ const Username = () => {
   const fetchUser = async () => {
     try {
       const { data } = await axios.get(`/user/${router.query.username}`);
-      //   console.log("router.query.username => ", data);
+
       setUser(data);
     } catch (err) {
       console.log(err);
     }
   };
+
   const imageSource = (user) => {
     if (user.image) {
       return user.image.url;

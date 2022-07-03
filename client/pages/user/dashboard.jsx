@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context";
 import UserRoute from "../../components/routes/UserRoute";
 import PostForm from "../../components/forms/PostForm";
-import { useRouter } from "next/router";
+import { useRouter, userRouter } from "next/router";
 import axios from "axios";
 import { toast } from "react-toastify";
 import PostList from "../../components/cards/PostList";
@@ -69,7 +69,7 @@ const Home = () => {
 
   const postSubmit = async (e) => {
     e.preventDefault();
-
+    // console.log("post => ", content);
     try {
       const { data } = await axios.post("/create-post", { content, image });
       console.log("create post response => ", data);
@@ -91,9 +91,11 @@ const Home = () => {
     const file = e.target.files[0];
     let formData = new FormData();
     formData.append("image", file);
+    // console.log([...formData]);
     setUploading(true);
     try {
       const { data } = await axios.post("/upload-image", formData);
+      // console.log("uploaded image => ", data);
       setImage({
         url: data.url,
         public_id: data.public_id,
@@ -118,8 +120,10 @@ const Home = () => {
   };
 
   const handleFollow = async (user) => {
+    // console.log("add this user to following list ", user);
     try {
       const { data } = await axios.put("/user-follow", { _id: user._id });
+      // console.log("handle follow response => ", data);
       // update local storage, update user, keep token
       let auth = JSON.parse(localStorage.getItem("auth"));
       auth.user = data;
@@ -138,6 +142,7 @@ const Home = () => {
   };
 
   const handleLike = async (_id) => {
+    // console.log("like this post => ", _id);
     try {
       const { data } = await axios.put("/like-post", { _id });
       // console.log("liked", data);
@@ -148,6 +153,7 @@ const Home = () => {
   };
 
   const handleUnlike = async (_id) => {
+    // console.log("unlike this post => ", _id);
     try {
       const { data } = await axios.put("/unlike-post", { _id });
       // console.log("unliked", data);
@@ -164,7 +170,8 @@ const Home = () => {
 
   const addComment = async (e) => {
     e.preventDefault();
-
+    // console.log("add comment to this post id", currentPost._id);
+    // console.log("save comment to db", comment);
     try {
       const { data } = await axios.put("/add-comment", {
         postId: currentPost._id,
@@ -200,7 +207,7 @@ const Home = () => {
       <div className="container-fluid">
         <div className="row py-5 text-light bg-default-image">
           <div className="col text-center">
-            <h1 className="text-white">Newsfeed</h1>
+            <h1>Newsfeed</h1>
           </div>
         </div>
 
