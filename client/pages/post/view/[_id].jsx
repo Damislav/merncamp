@@ -2,9 +2,9 @@ import ParallaxBG from "../../../components/cards/ParallaxBG";
 import axios from "axios";
 import PostPublic from "../../../components/cards/PostPublic";
 import Head from "next/head";
-import PostList from "../../../components/cards/PostList";
 
 const SinglePost = ({ post }) => {
+  console.log(post);
   const head = () => (
     <Head>
       <title>MERNCAMP - A social network by devs for devs</title>

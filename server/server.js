@@ -5,15 +5,13 @@ const morgan = require("morgan");
 import dotenv from "dotenv";
 import { readdirSync } from "fs";
 
-const app = express();
 dotenv.config();
 
-import { createServer } from "http";
-import { Server } from "socket.io";
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
+const app = express();
+const http = require("http").createServer(app);
+const io = require("socket.io")(http, {
   cors: {
-    origin: [process.env.CLIENT_URL],
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-type"],
   },
@@ -46,10 +44,14 @@ app.use(
 readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)));
 // socket io
 
-io.on("connection", (socket) => {
-  console.log(socket.id); // ojIckSD2jqNzOqIrAGzL
+io.on("connect", (socket) => {
+  // console.log("SOCKET>IO", socket.id);
+  socket.on("new-post", (newPost) => {
+    // console.log("socketio new post => ", newPost);
+    socket.broadcast.emit("new-post", newPost);
+  });
 });
 
 const port = process.env.PORT || 8000;
 
-httpServer.listen(port, () => console.log(`Server running on port ${port}`));
+http.listen(port, () => console.log(`Server running on port ${port}`));

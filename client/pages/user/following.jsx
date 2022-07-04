@@ -47,7 +47,7 @@ const Following = () => {
       // update people state
       let filtered = people.filter((p) => p._id !== user._id);
       setPeople(filtered);
-      toast.error(`Unfollowed ${user.name}`);
+      // toast.error(`Unfollowed ${user.name}`);
     } catch (err) {
       console.log(err);
     }

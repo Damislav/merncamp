@@ -3,20 +3,14 @@ import renderHTML from "react-render-html";
 import moment from "moment";
 import { Avatar } from "antd";
 import PostImage from "../images/PostImage";
-import {
-  HeartOutlined,
-  HeartFilled,
-  CommentOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { HeartOutlined, HeartFilled, CommentOutlined } from "@ant-design/icons";
 import { UserContext } from "../../context";
 import { useRouter } from "next/router";
 import { imageSource } from "../../functions";
 
 const PostPublic = ({ post, commentsCount = 10 }) => {
   const [state] = useContext(UserContext);
-  // const router = useRouter();
+  const router = useRouter();
 
   return (
     <>
