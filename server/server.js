@@ -10,6 +10,7 @@ dotenv.config();
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
+  path: "/socket.io",
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
@@ -42,8 +43,11 @@ app.use(
 
 // autoload routes
 readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)));
-// socket io
 
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+// socket io
 io.on("connect", (socket) => {
   // console.log("SOCKET>IO", socket.id);
   socket.on("new-post", (newPost) => {
