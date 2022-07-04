@@ -2,10 +2,16 @@ import { useContext } from "react";
 import renderHTML from "react-render-html";
 import moment from "moment";
 import { Avatar } from "antd";
-import "../images/PostImage";
-import { HeartOutlined, HeartFilled, CommentOutlined } from "@ant-design/icons";
+import PostImage from "../images/PostImage";
+import {
+  HeartOutlined,
+  HeartFilled,
+  CommentOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { UserContext } from "../../context";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { imageSource } from "../../functions";
 
 const PostPublic = ({ post, commentsCount = 10 }) => {
@@ -44,9 +50,7 @@ const PostPublic = ({ post, commentsCount = 10 }) => {
                 {post.likes.length} likes
               </div>
               <CommentOutlined className="text-danger pt-2 h5 px-2" />
-              <div className="pt-2 pl-3">
-                <a>{post.comments.length} comments</a>
-              </div>
+              <div className="pt-2 pl-3">{post.comments.length} comments</div>
             </div>
           </div>
           {/* 2 comments */}

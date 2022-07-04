@@ -48,7 +48,7 @@ const SinglePost = ({ post }) => {
 
 export async function getServerSideProps(ctx) {
   const { data } = await axios.get(`/post/${ctx.params._id}`);
-
+  // console.log(data);
   return {
     props: {
       post: data,
