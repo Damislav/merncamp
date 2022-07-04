@@ -11,7 +11,7 @@ import "antd/dist/antd.css";
 function MyApp({ Component, pageProps }) {
   return (
     <UserProvider>
-      <Head> </Head>
+      <Head />
       <Nav />
       <ToastContainer position="top-center" />
       <Component {...pageProps} />

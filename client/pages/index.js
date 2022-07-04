@@ -1,14 +1,20 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../context";
 import ParallaxBG from "../components/cards/ParallaxBG";
 import axios from "axios";
 import PostPublic from "../components/cards/PostPublic";
 import Head from "next/head";
 import Link from "next/link";
+import io from "socket.io-client";
 
+const socket = io(process.env.NEXT_PUBLIC_SOCKETIO, {
+  reconnection: true,
+});
 const Home = ({ posts }) => {
   const [state, setState] = useContext(UserContext);
-
+  useEffect(() => {
+ 
+  }, []);
   const head = () => (
     <Head>
       <title>MERNCAMP - A social network by devs for devs</title>
@@ -37,29 +43,30 @@ const Home = ({ posts }) => {
 
       <div className="container">
         <div className="row pt-5">
-          {posts.map((post, i) => (
-            <div key={i} className="col-md-4">
-              <Link href={`/post/view/${post._id}`}>
-                <a>
-                  <PostPublic key={post._id} post={post} />
-                </a>
-              </Link>
-            </div>
-          ))}
+          {posts &&
+            posts.map((post, i) => (
+              <div key={i} className="col-md-4">
+                <Link href={`/post/view/${post._id}`}>
+                  <a>
+                    <PostPublic key={post._id} post={post} />
+                  </a>
+                </Link>
+              </div>
+            ))}
         </div>
       </div>
     </>
   );
 };
 
-export async function getServerSideProps() {
+export default Home;
+
+export async function getServerSideProps(context) {
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API}/posts`);
-  // console.log(data);
+
   return {
     props: {
       posts: data,
     },
   };
 }
-
-export default Home;

@@ -2,6 +2,7 @@ import ParallaxBG from "../../../components/cards/ParallaxBG";
 import axios from "axios";
 import PostPublic from "../../../components/cards/PostPublic";
 import Head from "next/head";
+import PostList from "../../../components/cards/PostList";
 
 const SinglePost = ({ post }) => {
   const head = () => (
@@ -34,7 +35,6 @@ const SinglePost = ({ post }) => {
     <>
       {head()}
       <ParallaxBG url="/images/default.jpg" />
-
       <div className="container">
         <div className="row pt-5">
           <div className="col-md-8 offset-md-2">
@@ -46,14 +46,13 @@ const SinglePost = ({ post }) => {
   );
 };
 
+export default SinglePost;
 export async function getServerSideProps(ctx) {
   const { data } = await axios.get(`/post/${ctx.params._id}`);
-  // console.log(data);
+
   return {
     props: {
       post: data,
     },
   };
 }
-
-export default SinglePost;
