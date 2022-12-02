@@ -44,9 +44,6 @@ app.use(
 // autoload routes
 readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)));
 
-app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
 // socket io
 io.on("connect", (socket) => {
   // console.log("SOCKET>IO", socket.id);
