@@ -19,7 +19,7 @@
     "express-formidable": "^1.2.0",
     "express-jwt": "^6.0.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^6.11.3",
+    "mongoose": "^6.12.0",
     "morgan": "^1.10.0",
     "nanoid": "^4.0.0",
     "socket.io": "^4.7.1",
